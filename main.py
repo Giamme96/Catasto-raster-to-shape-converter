@@ -45,7 +45,6 @@ df = pd.read_excel(input_excel_path,
                    dtype={"id" : str, "cod_comune" : str, "sezione" : str, "foglio" : str, "allegato" : str, "sviluppo" : str, "particella" : str, "min_lat" : float, "min_lon" : float, "max_lat" : float, "max_lon" : float}
                    )
 
-df = df.head(10)
 # Scale up bbox, to be safer with bbox exclusions
 ScaleUpBox(df)
 
