@@ -1,13 +1,10 @@
-#TODO -> export in excel
-
 import pandas as pd
 import geopandas as gpd
+import numpy as np
 
 from wms_requests import RequestFeatureOnPoint, InitializeWms, InitializeSession
 from geo_operations import SmoothShape, ScaleUpBox, ExtractShapeFromRaster, ComputeAreaAndCentroid, BufferGdf
 from io_services import CreateFolder, ExportPickle, ExportGDB, ExportShapefile, ExportExcel
-
-import numpy as np
 
 # Paths
 input_excel_path: str = r"input_bbox.xlsx"
@@ -48,6 +45,7 @@ df = pd.read_excel(input_excel_path,
                    dtype={"id" : str, "cod_comune" : str, "sezione" : str, "foglio" : str, "allegato" : str, "sviluppo" : str, "particella" : str, "min_lat" : float, "min_lon" : float, "max_lat" : float, "max_lon" : float}
                    )
 
+df = df.head(10)
 # Scale up bbox, to be safer with bbox exclusions
 ScaleUpBox(df)
 
@@ -91,10 +89,10 @@ gdf_fabbricati = gdf_merged_smoothed[gdf_merged_smoothed["tipo"] == "Fabbricato"
 gdf_fabbricati.pop("shape_centroid")
 gdf_union_particelle_recalculated.pop("shape_centroid")
 
-
 # Export results
 ExportPickle([gdf_union_particelle_recalculated, gdf_fabbricati], output_pickle, lista_layer_to_export)
 # ExportGDB([gdf_union_particelle_recalculated, gdf_fabbricati], output_gdb, lista_layer_to_export)
 ExportShapefile([gdf_union_particelle_recalculated, gdf_fabbricati], output_shapefile, lista_layer_to_export)
 ExportExcel([gdf_union_particelle_recalculated, gdf_fabbricati], output_excel, output_crs)
+
 print("End")
